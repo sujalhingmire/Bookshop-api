@@ -1,8 +1,8 @@
-# 📚 The Grand Bookshop — FastAPI Application
+# The Grand Bookshop — FastAPI Application
 
 A full-featured Bookshop REST API + Web UI built with **FastAPI**, **SQLAlchemy**, and **Python**.
 
-## ✨ Features
+## Features
 
 - **Books** — CRUD: create, list, search, filter by genre, update, delete
 - **Authors** — Register authors and link them to books
@@ -14,7 +14,7 @@ A full-featured Bookshop REST API + Web UI built with **FastAPI**, **SQLAlchemy*
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install dependencies
 ```bash
@@ -35,12 +35,9 @@ uvicorn main:app --reload
 | URL | Description |
 |-----|-------------|
 | http://localhost:8000 | 📚 Bookshop Web UI |
-| http://localhost:8000/docs | 🔧 Swagger API Docs |
-| http://localhost:8000/redoc | 📄 ReDoc API Docs |
-
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 bookshop/
@@ -57,7 +54,7 @@ bookshop/
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Books
 | Method | Endpoint | Description |
@@ -90,7 +87,7 @@ bookshop/
 
 ---
 
-## 🗄️ Switching to PostgreSQL
+##  Switching to PostgreSQL
 
 In `database.py`, replace the URL:
 ```python
@@ -103,7 +100,7 @@ pip install psycopg2-binary
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
