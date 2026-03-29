@@ -1,21 +1,21 @@
-# 📚 The Grand Bookshop — FastAPI Application
+#  The Grand Bookshop — FastAPI Application
 
 A full-featured Bookshop REST API + Web UI built with **FastAPI**, **SQLAlchemy**, and **Python**.
 
-## ✨ Features
+## Features
 
 - **Books** — CRUD: create, list, search, filter by genre, update, delete
 - **Authors** — Register authors and link them to books
 - **Orders** — Place orders with stock validation, order status workflow
 - **Stats** — Live dashboard: total books, authors, orders, revenue, low-stock alerts
-- **🔍 Elasticsearch Search** — Full-text, fuzzy, filtered search + autocomplete (search branch)
+- **Elasticsearch Search** — Full-text, fuzzy, filtered search + autocomplete (search branch)
 - **Beautiful Web UI** — Served directly from FastAPI at `/`
 - **Interactive API Docs** — Swagger UI at `/docs`, ReDoc at `/redoc`
 - **SQLite** by default — swap to PostgreSQL/MySQL in `database.py`
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Install dependencies
 ```bash
@@ -56,7 +56,7 @@ curl -X POST http://localhost:8000/search/reindex/
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 bookshop/
@@ -75,7 +75,7 @@ bookshop/
 
 ---
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 ### Books
 | Method | Endpoint | Description |
@@ -106,7 +106,7 @@ bookshop/
 |--------|----------|-------------|
 | `GET` | `/stats/` | Shop statistics |
 
-### 🔍 Search (Elasticsearch)
+### Search (Elasticsearch)
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/search/books/` | Full-text book search with filters |
@@ -146,7 +146,7 @@ GET /search/suggestions/?q=har
 
 ---
 
-## 🗄️ Switching to PostgreSQL
+## Switching to PostgreSQL
 
 In `database.py`, replace the URL:
 ```python
@@ -159,7 +159,7 @@ pip install psycopg2-binary
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
