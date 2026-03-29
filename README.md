@@ -50,9 +50,7 @@ curl -X POST http://localhost:8000/search/reindex/
 | URL | Description |
 |-----|-------------|
 | http://localhost:8000 | 📚 Bookshop Web UI |
-| http://localhost:8000/docs | 🔧 Swagger API Docs |
-| http://localhost:8000/redoc | 📄 ReDoc API Docs |
-| http://localhost:8000/search/health/ | 🔍 ES connection health |
+
 
 ---
 
