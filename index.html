@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📚 The Grand Bookshop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1208;
+      --cream: #faf6ee;
+      --gold: #c9963a;
+      --gold-light: #f0d896;
+      --rust: #8b3a1c;
+      --sage: #4a6741;
+      --border: #d6c8a8;
+      --shadow: rgba(26,18,8,0.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Lato', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.02em;
+      color: var(--gold-light);
+    }
+    .logo span { color: var(--gold); font-style: italic; }
+    nav { display: flex; gap: 0.25rem; }
+    nav button {
+      background: none;
+      border: none;
+      color: #bbb;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    nav button:hover, nav button.active {
+      background: rgba(201,150,58,0.15);
+      color: var(--gold-light);
+    }
+    nav button.active { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--ink) 0%, #2d1f0e 60%, var(--rust) 100%);
+      color: var(--cream);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9963a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+    .hero p { font-size: 1.1rem; color: var(--gold-light); position: relative; }
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 2rem;
+      position: relative;
+    }
+    .stat-item { text-align: center; }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      display: block;
+    }
+    .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #aaa; }
+
+    /* ── SECTIONS ── */
+    .section { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .section.active { display: block; }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--gold);
+      color: var(--rust);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ── SEARCH & FILTER ── */
+    .toolbar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .search-input, select, input[type="text"], input[type="email"],
+    input[type="number"], textarea {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      background: #fff;
+      color: var(--ink);
+      transition: border-color 0.2s;
+    }
+    .search-input:focus, select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .search-input { flex: 1; min-width: 200px; }
+
+    /* ── CARDS ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: 1px solid var(--border);
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
+    .card-cover {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      background: linear-gradient(135deg, #f5ede0, #e8d5b7);
+    }
+    .card-body { padding: 1rem; }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+      line-height: 1.3;
+    }
+    .card-author { font-size: 0.8rem; color: #888; margin-bottom: 0.5rem; }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      background: var(--gold-light);
+      color: var(--rust);
+      font-weight: 700;
+    }
+    .price { font-size: 1.1rem; font-weight: 700; color: var(--sage); }
+    .stock-low { color: var(--rust); font-size: 0.75rem; }
+
+    /* ── FORMS ── */
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 16px var(--shadow);
+      border: 1px solid var(--border);
+      max-width: 600px;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #666; }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      padding: 0.65rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--ink); color: var(--cream); }
+    .btn-primary:hover { background: var(--rust); }
+    .btn-gold { background: var(--gold); color: #fff; }
+    .btn-gold:hover { background: #b8832a; }
+    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.78rem; }
+    .btn-danger { background: #e53e3e; color: #fff; }
+    .btn-danger:hover { background: #c53030; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px var(--shadow);
+      font-size: 0.88rem;
+    }
+    th {
+      background: var(--ink);
+      color: var(--gold-light);
+      padding: 0.9rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fdf8f0; }
+
+    /* ── STATUS BADGES ── */
+    .status {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-confirmed { background: #dbeafe; color: #1e40af; }
+    .status-shipped { background: #d1fae5; color: #065f46; }
+    .status-delivered { background: #d1fae5; color: #065f46; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+    /* ── ALERTS ── */
+    .alert {
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    .alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+    .alert-error { background: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444; }
+
+    /* ── MODAL ── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.open { display: flex; }
+    .modal {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 520px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--rust);
+    }
+    .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+    /* ── LOADER ── */
+    .loader { text-align: center; padding: 3rem; color: #aaa; font-style: italic; }
+    .empty { text-align: center; padding: 3rem; color: #bbb; }
+    .empty-icon { font-size: 3rem; }
+
+    /* ── CART BADGE ── */
+    .cart-btn { position: relative; }
+    .cart-count {
+      position: absolute;
+      top: 0; right: 0;
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">The <span>Grand</span> Bookshop</div>
+  <nav>
+    <button class="active" onclick="showSection('books')">Books</button>
+    <button onclick="showSection('authors')">Authors</button>
+    <button onclick="showSection('orders')">Orders</button>
+    <button onclick="showSection('add-book')">+ Add Book</button>
+    <button onclick="showSection('add-author')">+ Add Author</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <h1>📚 Welcome to The Grand Bookshop</h1>
+  <p>Discover, manage, and order books with elegance</p>
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-item"><span class="stat-number" id="stat-books">—</span><span class="stat-label">Books</span></div>
+    <div class="stat-item"><span class="stat-number" id="stat-authors">—</span><span class="stat-label">Authors</span></div>
+    <div class="stat-item"><span class="stat-number" id="stat-orders">—</span><span class="stat-label">Orders</span></div>
+    <div class="stat-item"><span class="stat-number" id="stat-revenue">—</span><span class="stat-label">Revenue</span></div>
+  </div>
+</div>
+
+<!-- BOOKS -->
+<section class="section active" id="section-books">
+  <div class="section-title">📖 Books</div>
+  <div class="toolbar">
+    <input class="search-input" id="search-input" placeholder="Search by title or description…" oninput="searchBooks()" />
+    <select id="genre-filter" onchange="searchBooks()">
+      <option value="">All Genres</option>
+      <option>Dystopian Fiction</option>
+      <option>Fantasy</option>
+      <option>Magical Realism</option>
+      <option>Historical Fiction</option>
+      <option>Literary Fiction</option>
+      <option>Political Satire</option>
+      <option>Romance</option>
+      <option>Thriller</option>
+    </select>
+    <button class="btn btn-gold btn-sm" onclick="loadBooks()">↻ Refresh</button>
+  </div>
+  <div id="books-grid" class="grid"><div class="loader">Loading books…</div></div>
+</section>
+
+<!-- AUTHORS -->
+<section class="section" id="section-authors">
+  <div class="section-title">✍️ Authors</div>
+  <div id="authors-grid" class="grid"><div class="loader">Loading authors…</div></div>
+</section>
+
+<!-- ORDERS -->
+<section class="section" id="section-orders">
+  <div class="section-title">🛒 Orders</div>
+  <button class="btn btn-gold btn-sm" style="margin-bottom:1rem" onclick="loadOrders()">↻ Refresh</button>
+  <div id="alert-orders"></div>
+  <div class="table-wrap" id="orders-table"><div class="loader">Loading orders…</div></div>
+</section>
+
+<!-- ADD BOOK FORM -->
+<section class="section" id="section-add-book">
+  <div class="section-title">➕ Add New Book</div>
+  <div id="alert-book"></div>
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Title *</label>
+        <input type="text" id="b-title" placeholder="Book title" />
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <select id="b-author"><option value="">— Select Author —</option></select>
+      </div>
+      <div class="form-group">
+        <label>Genre</label>
+        <input type="text" id="b-genre" placeholder="e.g. Fantasy" />
+      </div>
+      <div class="form-group">
+        <label>ISBN</label>
+        <input type="text" id="b-isbn" placeholder="978-…" />
+      </div>
+      <div class="form-group">
+        <label>Published Year</label>
+        <input type="number" id="b-year" placeholder="2024" min="1000" max="2099" />
+      </div>
+      <div class="form-group">
+        <label>Price (£) *</label>
+        <input type="number" id="b-price" placeholder="9.99" step="0.01" min="0.01" />
+      </div>
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" id="b-stock" placeholder="50" min="0" />
+      </div>
+      <div class="form-group full">
+        <label>Description</label>
+        <textarea id="b-desc" placeholder="Brief description of the book…"></textarea>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem">
+      <button class="btn btn-primary" onclick="submitBook()">Add Book</button>
+    </div>
+  </div>
+</section>
+
+<!-- ADD AUTHOR FORM -->
+<section class="section" id="section-add-author">
+  <div class="section-title">➕ Add New Author</div>
+  <div id="alert-author"></div>
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Full Name *</label>
+        <input type="text" id="a-name" placeholder="Author's full name" />
+      </div>
+      <div class="form-group">
+        <label>Nationality</label>
+        <input type="text" id="a-nationality" placeholder="e.g. British" />
+      </div>
+      <div class="form-group full">
+        <label>Biography</label>
+        <textarea id="a-bio" placeholder="Short biography…"></textarea>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem">
+      <button class="btn btn-primary" onclick="submitAuthor()">Add Author</button>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER MODAL -->
+<div class="overlay" id="order-overlay">
+  <div class="modal">
+    <h3>🛒 Place an Order</h3>
+    <div id="order-book-info" style="margin-bottom:1rem;font-style:italic;color:#888"></div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Your Name *</label>
+        <input type="text" id="o-name" placeholder="Full name" />
+      </div>
+      <div class="form-group full">
+        <label>Email *</label>
+        <input type="email" id="o-email" placeholder="email@example.com" />
+      </div>
+      <div class="form-group full">
+        <label>Delivery Address</label>
+        <textarea id="o-address" placeholder="Street, City, Postcode…" style="min-height:60px"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Quantity</label>
+        <input type="number" id="o-qty" value="1" min="1" max="99" />
+      </div>
+    </div>
+    <div id="alert-order"></div>
+    <div class="modal-footer">
+      <button class="btn btn-sm" onclick="closeOrderModal()">Cancel</button>
+      <button class="btn btn-gold btn-sm" onclick="submitOrder()">Confirm Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK DETAIL MODAL -->
+<div class="overlay" id="book-overlay">
+  <div class="modal" id="book-detail"></div>
+</div>
+
+<script>
+  const API = '';  // same origin — FastAPI serves both
+  let selectedBookId = null;
+
+  // ── NAVIGATION ──────────────────────────────────────────────────────────────
+  function showSection(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'books') loadBooks();
+    if (name === 'authors') loadAuthors();
+    if (name === 'orders') loadOrders();
+    if (name === 'add-book') loadAuthorsForSelect();
+  }
+
+  // ── STATS ────────────────────────────────────────────────────────────────────
+  async function loadStats() {
+    const r = await fetch(`${API}/stats/`);
+    const d = await r.json();
+    document.getElementById('stat-books').textContent = d.total_books;
+    document.getElementById('stat-authors').textContent = d.total_authors;
+    document.getElementById('stat-orders').textContent = d.total_orders;
+    document.getElementById('stat-revenue').textContent = '£' + d.total_revenue.toFixed(2);
+  }
+
+  // ── BOOKS ────────────────────────────────────────────────────────────────────
+  async function loadBooks() {
+    const search = document.getElementById('search-input').value;
+    const genre = document.getElementById('genre-filter').value;
+    let url = `${API}/books/?limit=50`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (genre) url += `&genre=${encodeURIComponent(genre)}`;
+    document.getElementById('books-grid').innerHTML = '<div class="loader">Loading…</div>';
+    const r = await fetch(url);
+    const books = await r.json();
+    renderBooks(books);
+  }
+
+  function searchBooks() { loadBooks(); }
+
+  const BOOK_EMOJIS = { 'Dystopian Fiction':'🌑','Fantasy':'🧙','Magical Realism':'🌀','Historical Fiction':'🏛️','Literary Fiction':'🌿','Political Satire':'🐷','Romance':'❤️','Thriller':'🔪','default':'📖' };
+
+  function renderBooks(books) {
+    const grid = document.getElementById('books-grid');
+    if (!books.length) { grid.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>No books found</p></div>'; return; }
+    grid.innerHTML = books.map(b => `
+      <div class="card" onclick="openBook(${b.id})">
+        <div class="card-cover">${BOOK_EMOJIS[b.genre] || BOOK_EMOJIS.default}</div>
+        <div class="card-body">
+          <div class="card-title">${b.title}</div>
+          <div class="card-author">${b.author ? b.author.name : 'Unknown Author'}</div>
+          <div class="card-meta">
+            <span class="badge">${b.genre || 'General'}</span>
+            <span class="price">£${b.price.toFixed(2)}</span>
+          </div>
+          ${b.stock < 5 ? `<div class="stock-low" style="margin-top:0.4rem">⚠ Only ${b.stock} left!</div>` : `<div style="font-size:0.75rem;color:#aaa;margin-top:0.4rem">In stock: ${b.stock}</div>`}
+        </div>
+      </div>`).join('');
+  }
+
+  async function openBook(id) {
+    const r = await fetch(`${API}/books/${id}`);
+    const b = await r.json();
+    selectedBookId = id;
+    document.getElementById('book-detail').innerHTML = `
+      <h3>${BOOK_EMOJIS[b.genre] || '📖'} ${b.title}</h3>
+      <p style="color:#888;margin-bottom:0.75rem">${b.author ? b.author.name : 'Unknown'} ${b.published_year ? '· '+b.published_year : ''}</p>
+      ${b.genre ? `<span class="badge" style="margin-bottom:1rem;display:inline-block">${b.genre}</span>` : ''}
+      <p style="line-height:1.7;color:#555;margin-bottom:1rem">${b.description || 'No description available.'}</p>
+      <div style="display:flex;gap:2rem;margin-bottom:1.25rem">
+        <div><strong style="color:var(--sage);font-size:1.3rem">£${b.price.toFixed(2)}</strong></div>
+        <div style="font-size:0.85rem;color:#888">Stock: <strong>${b.stock}</strong></div>
+        ${b.isbn ? `<div style="font-size:0.85rem;color:#888">ISBN: ${b.isbn}</div>` : ''}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-sm" onclick="closeBookModal()">Close</button>
+        ${b.stock > 0 ? `<button class="btn btn-gold btn-sm" onclick="openOrderModal(${b.id},'${b.title.replace(/'/g,"\\'")}')">Order Now</button>` : '<span style="color:var(--rust);font-size:0.85rem">Out of Stock</span>'}
+      </div>`;
+    document.getElementById('book-overlay').classList.add('open');
+  }
+  function closeBookModal() { document.getElementById('book-overlay').classList.remove('open'); }
+
+  // ── AUTHORS ──────────────────────────────────────────────────────────────────
+  async function loadAuthors() {
+    document.getElementById('authors-grid').innerHTML = '<div class="loader">Loading…</div>';
+    const r = await fetch(`${API}/authors/?limit=50`);
+    const authors = await r.json();
+    const grid = document.getElementById('authors-grid');
+    if (!authors.length) { grid.innerHTML = '<div class="empty"><div class="empty-icon">🖋️</div><p>No authors yet</p></div>'; return; }
+    grid.innerHTML = authors.map(a => `
+      <div class="card">
+        <div class="card-cover">✍️</div>
+        <div class="card-body">
+          <div class="card-title">${a.name}</div>
+          <div class="card-author">${a.nationality || ''}</div>
+          ${a.bio ? `<p style="font-size:0.8rem;color:#888;margin-top:0.5rem;line-height:1.5">${a.bio.slice(0,100)}${a.bio.length>100?'…':''}</p>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  async function loadAuthorsForSelect() {
+    const r = await fetch(`${API}/authors/?limit=100`);
+    const authors = await r.json();
+    const sel = document.getElementById('b-author');
+    sel.innerHTML = '<option value="">— Select Author —</option>' + authors.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+  }
+
+  // ── ORDERS ───────────────────────────────────────────────────────────────────
+  async function loadOrders() {
+    document.getElementById('orders-table').innerHTML = '<div class="loader">Loading…</div>';
+    const r = await fetch(`${API}/orders/?limit=50`);
+    const orders = await r.json();
+    if (!orders.length) {
+      document.getElementById('orders-table').innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No orders yet</p></div>'; return;
+    }
+    document.getElementById('orders-table').innerHTML = `
+      <table>
+        <thead><tr><th>#</th><th>Customer</th><th>Email</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>${orders.map(o => `
+          <tr>
+            <td><strong>#${o.id}</strong></td>
+            <td>${o.customer_name}</td>
+            <td>${o.customer_email}</td>
+            <td>${o.items.length} item(s)</td>
+            <td><strong>£${o.total_amount.toFixed(2)}</strong></td>
+            <td><span class="status status-${o.status}">${o.status}</span></td>
+            <td>${new Date(o.created_at).toLocaleDateString()}</td>
+            <td>
+              <select onchange="updateStatus(${o.id}, this.value)" style="font-size:0.75rem;padding:0.3rem">
+                <option value="">Update…</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  async function updateStatus(orderId, status) {
+    if (!status) return;
+    const r = await fetch(`${API}/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({status})
+    });
+    if (r.ok) {
+      showAlert('alert-orders', `Order #${orderId} updated to <strong>${status}</strong>`, 'success');
+      loadOrders();
+    } else {
+      showAlert('alert-orders', 'Failed to update status', 'error');
+    }
+  }
+
+  // ── ORDER MODAL ──────────────────────────────────────────────────────────────
+  function openOrderModal(bookId, bookTitle) {
+    closeBookModal();
+    selectedBookId = bookId;
+    document.getElementById('order-book-info').textContent = `Ordering: "${bookTitle}"`;
+    document.getElementById('alert-order').innerHTML = '';
+    document.getElementById('order-overlay').classList.add('open');
+  }
+  function closeOrderModal() { document.getElementById('order-overlay').classList.remove('open'); }
+
+  async function submitOrder() {
+    const name = document.getElementById('o-name').value.trim();
+    const email = document.getElementById('o-email').value.trim();
+    const address = document.getElementById('o-address').value.trim();
+    const qty = parseInt(document.getElementById('o-qty').value) || 1;
+    if (!name || !email) { showAlert('alert-order','Name and email are required','error'); return; }
+    const r = await fetch(`${API}/orders/`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ customer_name:name, customer_email:email, customer_address:address, items:[{book_id:selectedBookId, quantity:qty}] })
+    });
+    const d = await r.json();
+    if (r.ok) {
+      closeOrderModal();
+      loadStats();
+      showSection2('orders');
+      showAlert('alert-orders',`Order #${d.id} placed! Total: £${d.total_amount.toFixed(2)}`,'success');
+      loadOrders();
+    } else {
+      showAlert('alert-order', d.detail || 'Error placing order', 'error');
+    }
+  }
+
+  // ── SUBMIT BOOK ──────────────────────────────────────────────────────────────
+  async function submitBook() {
+    const title = document.getElementById('b-title').value.trim();
+    const price = parseFloat(document.getElementById('b-price').value);
+    const stock = parseInt(document.getElementById('b-stock').value);
+    if (!title || isNaN(price) || isNaN(stock)) { showAlert('alert-book','Title, price, and stock are required','error'); return; }
+    const payload = {
+      title, price, stock,
+      genre: document.getElementById('b-genre').value || null,
+      isbn: document.getElementById('b-isbn').value || null,
+      published_year: parseInt(document.getElementById('b-year').value) || null,
+      description: document.getElementById('b-desc').value || null,
+      author_id: parseInt(document.getElementById('b-author').value) || null,
+    };
+    const r = await fetch(`${API}/books/`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    const d = await r.json();
+    if (r.ok) {
+      showAlert('alert-book',`"${d.title}" added successfully! ID: #${d.id}`,'success');
+      ['b-title','b-isbn','b-genre','b-price','b-stock','b-year','b-desc'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('b-author').value = '';
+      loadStats();
+    } else {
+      showAlert('alert-book', d.detail || 'Error adding book', 'error');
+    }
+  }
+
+  // ── SUBMIT AUTHOR ────────────────────────────────────────────────────────────
+  async function submitAuthor() {
+    const name = document.getElementById('a-name').value.trim();
+    if (!name) { showAlert('alert-author','Author name is required','error'); return; }
+    const payload = { name, nationality: document.getElementById('a-nationality').value || null, bio: document.getElementById('a-bio').value || null };
+    const r = await fetch(`${API}/authors/`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    const d = await r.json();
+    if (r.ok) {
+      showAlert('alert-author',`Author "${d.name}" added!`,'success');
+      ['a-name','a-nationality','a-bio'].forEach(id => document.getElementById(id).value = '');
+    } else {
+      showAlert('alert-author', d.detail || 'Error', 'error');
+    }
+  }
+
+  // ── HELPERS ──────────────────────────────────────────────────────────────────
+  function showAlert(targetId, msg, type) {
+    const el = document.getElementById(targetId);
+    el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+    setTimeout(() => el.innerHTML = '', 4000);
+  }
+
+  function showSection2(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+  }
+
+  // Close modals on overlay click
+  document.getElementById('order-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeOrderModal(); });
+  document.getElementById('book-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeBookModal(); });
+
+  // ── INIT ─────────────────────────────────────────────────────────────────────
+  loadBooks();
+  loadStats();
+</script>
+</body>
+</html>
